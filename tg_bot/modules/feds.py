@@ -194,7 +194,7 @@ def del_fed(update, context):
 @typing_action
 @kigcmd(command='chatfed', pass_args=True)
 @spamcheck
-def fed_chat(update, context):
+def fed_chat(update, _):
     chat = update.effective_chat  # type: Optional[Chat]
     fed_id = sql.get_fed_id(chat.id)
 
@@ -209,9 +209,7 @@ def fed_chat(update, context):
         update.effective_message.reply_text("This group is not in any federation!")
         return
 
-    chat = update.effective_chat  # type: Optional[Chat]
     info = sql.get_fed_info(fed_id)
-
     text = "This chat is part of the following federation:"
     text += "\n{} (ID: <code>{}</code>)".format(info["fname"], fed_id)
 
@@ -483,8 +481,6 @@ def fed_info(update, context):
     FEDADMIN.append(int(owner.id))
     TotalAdminFed = len(FEDADMIN)
 
-    user = update.effective_user  # type: Optional[Chat]
-    chat = update.effective_chat  # type: Optional[Chat]
     info = sql.get_fed_info(fed_id)
 
     text = "<b>ℹ️ Federation Information:</b>"
@@ -528,8 +524,6 @@ def fed_admin(update, context):
         update.effective_message.reply_text("Only federation admins can do this!")
         return
 
-    user = update.effective_user  # type: Optional[Chat]
-    chat = update.effective_chat  # type: Optional[Chat]
     info = sql.get_fed_info(fed_id)
 
     text = "<b>Federation Admin {}:</b>\n\n".format(info["fname"])
@@ -820,7 +814,7 @@ def fed_ban(update, context):  # sourcery no-metrics
     starting = "Starting a federation ban for {} in the Federation <b>{}</b>.".format(
         user_target, fed_name
     )
-    update.effective_message.reply_text(starting, parse_mode=ParseMode.HTML)
+    strt_msg = update.effective_message.reply_text(starting, parse_mode=ParseMode.HTML)
 
     if reason == "":
         reason = "No reason given."
@@ -970,12 +964,9 @@ def fed_ban(update, context):  # sourcery no-metrics
                     except TelegramError:
                         pass
     if chats_in_fed == 0:
-        send_message(update.effective_message, "Fedban affected 0 chats. ")
+        strt_msg.edit_text("Fedban affected 0 chats.")
     elif chats_in_fed > 0:
-        send_message(
-            update.effective_message,
-            "Fedban affected {} chats. ".format(chats_in_fed),
-        )
+        strt_msg.edit_text("Fedban affected {} chats. ".format(chats_in_fed))
 
 
 @typing_action
@@ -2419,7 +2410,7 @@ def fed_help(update: Update, context: CallbackContext):
     elif help_info == "admin":
         help_text = gs(update.effective_chat.id, "FED_ADMIN_HELP")
     elif help_info == "user":
-        help_text = gs(update.effective_chat.id, "FED_USER_HELP") 
+        help_text = gs(update.effective_chat.id, "FED_USER_HELP")
     query.message.edit_text(
         text=help_text,
         parse_mode=ParseMode.MARKDOWN,
