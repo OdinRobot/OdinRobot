@@ -31,6 +31,52 @@ from .helper_funcs.admin_status import (
     user_not_admin_check,
 )
 
+@kigcmd(command="pinned", can_disable=False)
+@spamcheck
+@loggable
+@bot_admin
+def pinned(update: Update, context: CallbackContext) -> str:
+    bot = context.bot
+    msg = update.effective_message
+    msg_id = (
+        update.effective_message.reply_to_message.message_id
+        if update.effective_message.reply_to_message
+        else update.effective_message.message_id
+    )
+
+    chat = bot.getChat(chat_id=msg.chat.id)
+    if chat.pinned_message:
+        pinned_id = chat.pinned_message.message_id
+        if msg.chat.username:
+            link_chat_id = msg.chat.username
+            message_link = f"https://t.me/{link_chat_id}/{pinned_id}"
+        elif (str(msg.chat.id)).startswith("-100"):
+            link_chat_id = (str(msg.chat.id)).replace("-100", "")
+            message_link = f"https://t.me/c/{link_chat_id}/{pinned_id}"
+
+        msg.reply_text(
+            f"📌 Pinned the message on {html.escape(chat.title)}.",
+            reply_to_message_id=msg_id,
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="Pinned Messages",
+                            url=f"https://t.me/{link_chat_id}/{pinned_id}",
+                        )
+                    ]
+                ]
+            ),
+        )
+
+    else:
+        msg.reply_text(
+            f"There is no pinned message on <b>{html.escape(chat.title)}!</b>",
+            parse_mode=ParseMode.HTML,
+        )
+
 @kigcmd(command="pin", can_disable=False)
 @spamcheck
 @bot_admin_check(AdminPerms.CAN_PIN_MESSAGES)
