@@ -37,14 +37,27 @@ from .helper_funcs.admin_status import (
 @user_admin_check(AdminPerms.CAN_PIN_MESSAGES, allow_mods = True)
 @loggable
 def pin(update: Update, context: CallbackContext) -> str:
-    bot = context.bot
-    args = context.args
-
+    bot, args = context.bot, context.args
     user = update.effective_user
     chat = update.effective_chat
+    msg = update.effective_message
+    msg_id = msg.reply_to_message.message_id if msg.reply_to_message else msg.message_id
 
-    is_group = chat.type != "private" and chat.type != "channel"
+    if msg.chat.username:
+        # If chat has a username, use this format
+        link_chat_id = msg.chat.username
+        message_link = f"https://t.me/{link_chat_id}/{msg_id}"
+    elif (str(msg.chat.id)).startswith("-100"):
+        # If chat does not have a username, use this
+        link_chat_id = (str(msg.chat.id)).replace("-100", "")
+        message_link = f"https://t.me/c/{link_chat_id}/{msg_id}"
+
+    is_group = chat.type not in ("private", "channel")
     prev_message = update.effective_message.reply_to_message
+
+    if prev_message is None:
+        msg.reply_text("Reply a message to pin it!")
+        return
 
     is_silent = True
     if len(args) >= 1:
@@ -56,30 +69,43 @@ def pin(update: Update, context: CallbackContext) -> str:
 
     if prev_message and is_group:
         try:
-            pinn = prev_message.message_id
             bot.pinChatMessage(
-                chat.id, pinn, disable_notification=is_silent
+                chat.id, prev_message.message_id, disable_notification=is_silent
             )
-
-            if chat.username:
-                pinmsg = "https://t.me/{}/{}".format(chat.username, pinn)
-            else:
-                pinmsg = "https://t.me/c/{}/{}".format(str(chat.id)[4:], pinn)
-
-            dispatcher.bot.sendMessage(chat.id, "I have pinned [this message]({})".format(pinmsg), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+            msg.reply_text(
+                "Success! Pinned this message on this group",
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="📝 View Messages", url=f"{message_link}"
+                            ),
+                            InlineKeyboardButton(
+                                text="❌ Delete", callback_data="close2"
+                            ),
+                        ]
+                    ]
+                ),
+                parse_mode=ParseMode.HTML,
+                disable_web_page_preview=True,
+            )
         except BadRequest as excp:
-            if excp.message == "Chat_not_modified":
-                dispatcher.bot.sendMessage(chat.id, f"I couldn't pin the message from some reason.")
-                pass
-            else:
+            if excp.message != "Chat_not_modified":
                 raise
+
         log_message = (
             f"<b>{html.escape(chat.title)}:</b>\n"
-            f"#PINNED\n"
+            f"PINNED\n"
             f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}"
         )
 
         return log_message
+
+
+close_keyboard = InlineKeyboardMarkup(
+    [[InlineKeyboardButton("❌ Delete", callback_data="close2")]]
+)
+
 
 @kigcmd(command="unpin", can_disable=False)
 @spamcheck
