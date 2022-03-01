@@ -234,8 +234,8 @@ def ban(update: Update, context: CallbackContext) -> Optional[str]:  # sourcery 
         logmsg += did_ban
 
         message.reply_text("User {} was banned successfully from {}".format(
-            html.escape(message.reply_to_message.from_user.first_name),
-            html.escape(chat.title)
+            mention_html(member.user.id, member.user.first_name),
+            html.escape(chat.title),
         ),
             parse_mode="html"
         )
@@ -543,8 +543,8 @@ def unban(update: Update, context: CallbackContext) -> Optional[str]:  # sourcer
         logmsg += did_ban
 
         message.reply_text("User {} was unbanned successfully from {}".format(
-            html.escape(message.reply_to_message.from_user.first_name),
-            html.escape(chat.title)
+            mention_html(member.user.id, member.user.first_name),
+            html.escape(chat.title),
         ),
             parse_mode="html"
         )
