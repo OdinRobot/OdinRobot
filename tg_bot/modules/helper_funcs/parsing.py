@@ -225,7 +225,7 @@ def revertMd2HTML(text: str, buttons: Buttons) -> str:
         return f'||{match.group(1)}||{match.group(2)}'
 
     def _link_repl(match):
-        return f"[{match.group(2)}]({match.group(1)})"
+        return f"[{match.group(2)}]({match.group(3)})"
 
     def _buttons_repl(txt, btns):
         return txt + "".join(f"\n[{i.name}](buttonurl://{i.url}{':same' if i.same_line else ''})" for i in btns)
