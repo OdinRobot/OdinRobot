@@ -100,7 +100,7 @@ class KigyoINIT:
         self.ALLOW_CHATS =  self.parser.getboolean("ALLOW_CHATS", True)
         self.SUPPORT_GROUP =  self.parser.get("SUPPORT_GROUP", 0)
         self.IS_DEBUG =  self.parser.getboolean("IS_DEBUG", False)
-        self.ANTISPAM_TOGGLE =  self.parser.getboolean("ANTISPAM_TOGGLE", True)
+        #self.ANTISPAM_TOGGLE =  self.parser.getboolean("ANTISPAM_TOGGLE", False)
         self.GROUP_BLACKLIST =  self.parser.get("GROUP_BLACKLIST", [])
         self.GLOBALANNOUNCE =  self.parser.getboolean("GLOBALANNOUNCE", False)
         self.BACKUP_PASS =  self.parser.get("BACKUP_PASS", None)
@@ -165,7 +165,7 @@ ALLOW_CHATS = KInit.ALLOW_CHATS
 SUPPORT_GROUP = KInit.SUPPORT_GROUP
 IS_DEBUG = KInit.IS_DEBUG
 GROUP_BLACKLIST = KInit.GROUP_BLACKLIST
-ANTISPAM_TOGGLE = KInit.ANTISPAM_TOGGLE
+#ANTISPAM_TOGGLE = KInit.ANTISPAM_TOGGLE
 bot_username = KInit.bot_username
 GLOBALANNOUNCE = KInit.GLOBALANNOUNCE
 BACKUP_PASS = KInit.BACKUP_PASS
@@ -192,10 +192,10 @@ try:
 except AttributeError:
     IS_DEBUG = False
 
-try:
-    ANTISPAM_TOGGLE = ANTISPAM_TOGGLE
-except AttributeError:
-    ANTISPAM_TOGGLE = True
+#try:
+#    ANTISPAM_TOGGLE = ANTISPAM_TOGGLE
+#except AttributeError:
+#    ANTISPAM_TOGGLE = False
 
 # SpamWatch
 sw = KInit.init_sw()
@@ -254,11 +254,11 @@ def spamcheck(func):
             return False
         elif user.id == "777000":
             return False
-        elif antispam_module and ANTISPAM_TOGGLE:
-            parsing_date = time.mktime(message.date.timetuple())
-            if detect_user(user.id, chat.id, message, parsing_date):
-                return False
-            antispam_restrict_user(user.id, parsing_date)
+        #elif antispam_module and ANTISPAM_TOGGLE:
+        #    parsing_date = time.mktime(message.date.timetuple())
+        #    if detect_user(user.id, chat.id, message, parsing_date):
+        #        return False
+        #    antispam_restrict_user(user.id, parsing_date)
         elif int(user.id) in SPAMMERS:
             return False
         elif str(chat.id) in GROUP_BLACKLIST:
