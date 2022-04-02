@@ -22,7 +22,7 @@ python-telegram-bot==13.11
 requests
 spamwatch
 speedtest-cli
-sqlalchemy==1.4.11
+sqlalchemy
 telethon
 ujson
 gtts
@@ -32,7 +32,6 @@ pytimeparse
 lxml
 pycryptodome
 base58~=2.1.1
-
 bs4
 pytz
 
