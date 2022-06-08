@@ -126,7 +126,7 @@ class KigyoINIT:
         self.ALLOW_CHATS =  self.parser.getboolean("ALLOW_CHATS", True)
         self.SUPPORT_GROUP =  self.parser.get("SUPPORT_GROUP", 0)
         self.IS_DEBUG =  self.parser.getboolean("IS_DEBUG", False)
-        self.ANTISPAM_TOGGLE =  self.parser.getboolean("ANTISPAM_TOGGLE", True)
+        self.ANTISPAM_TOGGLE =  self.parser.getboolean("ANTISPAM_TOGGLE", False)
         self.GROUP_BLACKLIST =  self.parser.get("GROUP_BLACKLIST", [])
         self.GLOBALANNOUNCE =  self.parser.getboolean("GLOBALANNOUNCE", False)
         self.BACKUP_PASS =  self.parser.get("BACKUP_PASS", None)
@@ -226,7 +226,7 @@ except AttributeError:
 try:
     ANTISPAM_TOGGLE = ANTISPAM_TOGGLE
 except AttributeError:
-    ANTISPAM_TOGGLE = True
+    ANTISPAM_TOGGLE = False
 
 # SpamWatch
 sw = KInit.init_sw()
