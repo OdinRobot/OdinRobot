@@ -45,7 +45,7 @@ def cannot_ban(banner_id, user_id, message) -> bool:
             return True
         # elif user_id in SUPPORT_USERS:
         #     message.reply_text("My support users are ban immune")
-            return True
+        #    return True
         elif user_id in WHITELIST_USERS:
             message.reply_text("Let one of my Devs fight a Whitelist user.")
             return True
