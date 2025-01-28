@@ -220,10 +220,24 @@ if is_module_loaded(FILENAME):
                 for cmd in set(DISABLE_CMDS + DISABLE_OTHER)
             )
 
-            update.effective_message.reply_text(
-                "The following commands are toggleable:\n{}".format(result),
-                parse_mode=ParseMode.MARKDOWN,
-            )
+            text = "The following commands are toggleable:\n{}".format(result)
+            def paginate(text):
+                lines = text.split("\n")
+                previous_text = ""
+                for line in lines:
+                    if len(previous_text) + 1 + len(line) > 4096: # char limit
+                        yield previous_text
+                        # stop before limit, if adding line makes msg too long
+                        previous_text = line
+                    else:
+                        previous_text = (previous_text + "\n" + line).strip("\n")
+                yield previous_text
+
+            for page in paginate(text):
+                update.effective_message.reply_text(
+                    page,
+                    parse_mode=ParseMode.MARKDOWN,
+                )
         else:
             update.effective_message.reply_text("No commands can be disabled.")
 
