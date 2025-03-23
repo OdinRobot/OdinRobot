@@ -842,7 +842,7 @@ def fed_ban(update, context):  # sourcery no-metrics
     # Will send to current chat
     context.bot.send_message(
         chat.id,
-        "<b>FedBan reason updated</b>"
+        "<b>New FederationBan</b>"
         "\n<b>Federation:</b> {}"
         "\n<b>Federation Admin:</b> {}"
         "\n<b>User:</b> {}"
@@ -861,7 +861,7 @@ def fed_ban(update, context):  # sourcery no-metrics
     if getfednotif:
         context.bot.send_message(
             info["owner"],
-            "<b>FedBan reason updated</b>"
+            "<b>New FederationBan</b>"
             "\n<b>Federation:</b> {}"
             "\n<b>Federation Admin:</b> {}"
             "\n<b>User:</b> {}"
@@ -884,7 +884,7 @@ def fed_ban(update, context):  # sourcery no-metrics
         if int(get_fedlog) != int(chat.id):
             context.bot.send_message(
                 get_fedlog,
-                "<b>FedBan reason updated</b>"
+                "<b>New FederationBan</b>"
                 "\n<b>Federation:</b> {}"
                 "\n<b>Federation Admin:</b> {}"
                 "\n<b>User:</b> {}"
@@ -908,7 +908,7 @@ def fed_ban(update, context):  # sourcery no-metrics
         try:
             # Do not spamming all fed chats
             """
-			context.bot.send_message(chat, "<b>FedBan reason updated</b>" \
+			context.bot.send_message(chat, "<b>New FederationBan</b>" \
 							"\n<b>Federation:</b> {}" \
 							"\n<b>Federation Admin:</b> {}" \
 							"\n<b>User:</b> {}" \
@@ -931,7 +931,7 @@ def fed_ban(update, context):  # sourcery no-metrics
         # Also do not spamming all fed admins
         """
 		send_to_list(bot, FEDADMIN,
-				 "<b>FedBan reason updated</b>" \
+				 "<b>New FederationBan</b>" \
 							 "\n<b>Federation:</b> {}" \
 							 "\n<b>Federation Admin:</b> {}" \
 							 "\n<b>User:</b> {}" \
