@@ -214,10 +214,10 @@ if is_module_loaded(FILENAME):
     @user_admin_check(AdminPerms.CAN_CHANGE_INFO)
     @typing_action
     def list_cmds(update, context):
-        if DISABLE_CMDS + DISABLE_OTHER:
+        if DISABLE_CMDS:
             result = "".join(
                 " - `{}`\n".format(escape_markdown(str(cmd)))
-                for cmd in set(DISABLE_CMDS + DISABLE_OTHER)
+                for cmd in set(DISABLE_CMDS)
             )
 
             text = "The following commands are toggleable:\n{}".format(result)
